@@ -150,6 +150,13 @@
   <section class="hero teaser">
     <div class="container is-max-desktop">
       <div class="hero-body">
+        <p class="subtitle has-text-centered" style="max-width:840px;margin:0 auto 1.5rem;">
+          <strong>TL;DR.</strong> A Vision-Language-Action policy nails most of a manipulation task, then fails on the
+          one or two moments that actually decide it. We call those <strong>critical phases</strong> and define them
+          by <em>decision sensitivity</em> — how much the action there flips the outcome, <em>not</em> how likely
+          failure looks. We learn to detect them from <strong>successful demonstrations alone</strong> and
+          concentrate reinforcement-learning refinement only there.
+        </p>
         <div class="columns is-centered">
           <div class="column">
             <video poster="static/images/demo000.png" controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
@@ -162,10 +169,9 @@
             </video>
           </div>
         </div>
-        <h2 class="subtitle has-text-centered">
-          Critical phases (shaded) localized on two LIBERO-Long rollouts (&pi;<sub>0.5</sub> backbone). The decisive
-          moments concentrate around contact-rich grasps and final alignment — a small fraction of the rollout length.
-        </h2>
+        <p class="has-text-centered is-size-7 has-text-grey">
+          Critical phases (shaded) localized on two LIBERO-Long rollouts (&pi;<sub>0.5</sub> backbone) — a small fraction of each rollout.
+        </p>
       </div>
     </div>
   </section>
