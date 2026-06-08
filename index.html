@@ -43,8 +43,9 @@
 
   <title>Self-Supervised Critical Phase Detection for VLA Refinement</title>
 
-  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
-  <link rel="apple-touch-icon" href="static/images/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
+  <link rel="alternate icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="static/images/favicon.svg">
 
   <!-- Critical CSS -->
   <link rel="stylesheet" href="static/css/bulma.min.css">
@@ -106,7 +107,7 @@
             <h1 class="title is-1 publication-title">Self-Supervised Critical Phase Detection for VLA Refinement</h1>
             <div class="is-size-5 publication-authors">
               <span class="author-block">
-                <a href="https://github.com/Angledsugar" target="_blank">Chanyeok Choi</a><sup>1</sup>,</span>
+                <a href="https://angledsugar.github.io" target="_blank">Chanyeok Choi</a><sup>1</sup>,</span>
               <span class="author-block">
                 <a href="https://sites.google.com/umich.edu/youngmoonlee/home" target="_blank">Youngmoon Lee</a><sup>1</sup></span>
             </div>
@@ -296,6 +297,39 @@
             (<strong>VLA-RL, SimpleVLA-RL</strong>).</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Intervention probe -->
+  <section class="section">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">Acting inside the phase: an intervention probe <span class="tag is-warning is-medium">preliminary</span></h2>
+      <p>
+        A first test of <em>using</em> a detected phase. We attach a lightweight negate-replay intervention to a
+        runtime failure-probability detector (an LSTM over the &pi;<sub>0.5</sub> latent, SAFE-style) and let it act
+        whenever the score spikes. Each clip below is the <strong>baseline rollout (left)</strong> versus
+        <strong>the same rollout with intervention (right)</strong>, with the failure score overlaid.
+      </p>
+      <div class="columns is-centered">
+        <div class="column">
+          <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
+            <source src="static/videos/safe_recovered.mp4" type="video/mp4">
+          </video>
+          <p class="has-text-centered"><span class="tag is-success">RECOVERED</span>&nbsp; baseline fails &rarr; intervention rescues the rollout.</p>
+        </div>
+        <div class="column">
+          <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
+            <source src="static/videos/safe_broken.mp4" type="video/mp4">
+          </video>
+          <p class="has-text-centered"><span class="tag is-danger">BROKEN</span>&nbsp; baseline succeeds &rarr; the same trigger fires on a healthy step and breaks it.</p>
+        </div>
+      </div>
+      <p>
+        The takeaway is the point of this work: the intervention <em>can</em> rescue genuine failures (left), but a
+        failure-probability trigger also misfires on healthy steps (right). Acting on <em>where the outcome is
+        actually being decided</em> — criticality — rather than on <em>how likely failure looks</em> is what should
+        make such intervention reliably net-positive.
+      </p>
     </div>
   </section>
 
