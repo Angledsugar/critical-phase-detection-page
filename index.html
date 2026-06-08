@@ -109,10 +109,11 @@
               <span class="author-block">
                 <a href="https://angledsugar.github.io" target="_blank">Chanyeok Choi</a><sup>1</sup>,</span>
               <span class="author-block">
-                <a href="https://sites.google.com/umich.edu/youngmoonlee/home" target="_blank">Youngmoon Lee</a><sup>1</sup></span>
+                <a href="https://sites.google.com/umich.edu/youngmoonlee/home" target="_blank">Youngmoon Lee</a><sup>1,&#9993;</sup></span>
             </div>
             <div class="is-size-5 publication-authors">
               <span class="author-block"><sup>1</sup>Hanyang University</span>
+              <span class="author-block" style="margin-left:0.6rem;"><sup>&#9993;</sup>Corresponding&nbsp;author</span>
             </div>
             <div class="is-size-6 publication-authors" style="margin-top:0.5rem;">
               <span class="tag is-dark is-medium">Preprint &middot; Under review &middot; 2026</span>
@@ -120,12 +121,6 @@
 
             <div class="column has-text-centered">
               <div class="publication-links">
-                <span class="link-block">
-                  <a href="#BibTeX" class="external-link button is-normal is-rounded is-dark">
-                    <span class="icon"><i class="fas fa-quote-left"></i></span>
-                    <span>BibTeX</span>
-                  </a>
-                </span>
                 <span class="link-block">
                   <a href="#" aria-disabled="true" class="external-link button is-normal is-rounded is-dark" style="opacity:0.55;cursor:not-allowed;" onclick="return false;">
                     <span class="icon"><i class="fas fa-file-pdf"></i></span>
@@ -150,13 +145,6 @@
   <section class="hero teaser">
     <div class="container is-max-desktop">
       <div class="hero-body">
-        <p class="subtitle has-text-centered" style="max-width:840px;margin:0 auto 1.5rem;">
-          <strong>TL;DR.</strong> A Vision-Language-Action policy nails most of a manipulation task, then fails on the
-          one or two moments that actually decide it. We call those <strong>critical phases</strong> and define them
-          by <em>decision sensitivity</em> — how much the action there flips the outcome, <em>not</em> how likely
-          failure looks. We learn to detect them from <strong>successful demonstrations alone</strong> and
-          concentrate reinforcement-learning refinement only there.
-        </p>
         <div class="columns is-centered">
           <div class="column">
             <video poster="static/images/demo000.png" controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
@@ -171,6 +159,13 @@
         </div>
         <p class="has-text-centered is-size-7 has-text-grey">
           Critical phases (shaded) localized on two LIBERO-Long rollouts (&pi;<sub>0.5</sub> backbone) — a small fraction of each rollout.
+        </p>
+        <p class="subtitle has-text-centered" style="max-width:840px;margin:1.75rem auto 0;">
+          <strong>TL;DR.</strong> A Vision-Language-Action policy nails most of a manipulation task, then fails on the
+          one or two moments that actually decide it. We call those <strong>critical phases</strong> and define them
+          by <em>decision sensitivity</em> — how much the action there flips the outcome, <em>not</em> how likely
+          failure looks. We learn to detect them from <strong>successful demonstrations alone</strong> and
+          concentrate reinforcement-learning refinement only there.
         </p>
       </div>
     </div>
