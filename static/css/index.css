@@ -639,6 +639,38 @@ code {
   .lang-switch { display: none; }
 }
 
+/* Inline language switch (below BibTeX) */
+.lang-switch-inline {
+  display: inline-flex;
+  align-items: center;
+  background: var(--background-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.lang-switch-inline a {
+  padding: 0.55rem 1.4rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: var(--transition);
+  line-height: 1;
+}
+
+.lang-switch-inline a:hover {
+  background: var(--background-accent);
+  color: var(--text-primary);
+}
+
+.lang-switch-inline a.is-active {
+  background: var(--primary-color);
+  color: #fff;
+}
+
 
 /* Mobile Responsive Improvements */
 @media screen and (max-width: 768px) {
