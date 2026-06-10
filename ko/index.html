@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="VLA 개선을 위한 자기지도 결정 단계 탐지">
+  <meta name="description" content="성공적인 시연만으로 결정 단계 — 조작 롤아웃의 결과를 좌우하는 결정 민감 순간 — 를 탐지하여 비전-언어-행동(VLA) 정책을 개선합니다.">
+  <meta name="keywords" content="비전-언어-행동, VLA, 로봇 조작, 결정 단계, 결정 민감도, 실패 탐지, 강화학습, LIBERO, 모방 학습">
+  <meta name="author" content="Anonymous">
+  <meta name="robots" content="index, follow">
+  <meta name="language" content="Korean">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Anonymous">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:title" content="VLA 개선을 위한 자기지도 결정 단계 탐지">
+  <meta property="og:description" content="결정 단계는 조작 롤아웃의 결과를 좌우하는 결정 민감 순간으로, 실패 가능성과는 다릅니다. 우리는 이를 성공적인 시연만으로 탐지하고 강화학습 개선을 그 지점에 집중합니다.">
+  <meta property="og:url" content="https://angledsugar.github.io/critical-phase-detection-page/ko/">
+  <meta property="og:image" content="https://angledsugar.github.io/critical-phase-detection-page/static/images/demo000.png">
+  <meta property="og:image:alt" content="LIBERO-Long 롤아웃에서 국소화된 결정 단계">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="VLA 개선을 위한 자기지도 결정 단계 탐지">
+  <meta name="twitter:description" content="결정 단계는 결정 민감 순간이지 실패 가능성이 아닙니다. 성공적인 시연만으로 탐지하여 VLA 정책을 개선합니다.">
+  <meta name="twitter:image" content="https://angledsugar.github.io/critical-phase-detection-page/static/images/demo000.png">
+
+  <!-- Academic / citation -->
+  <meta name="citation_title" content="Self-Supervised Critical Phase Detection for VLA Refinement">
+  <meta name="citation_author" content="Anonymous">
+  <meta name="citation_publication_date" content="2026">
+
+  <meta name="theme-color" content="#2563eb">
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://ajax.googleapis.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+  <title>VLA 개선을 위한 자기지도 결정 단계 탐지</title>
+
+  <link rel="icon" type="image/svg+xml" href="../static/images/favicon.svg">
+  <link rel="alternate icon" type="image/x-icon" href="../static/images/favicon.ico">
+  <link rel="apple-touch-icon" href="../static/images/favicon.svg">
+
+  <!-- Language alternates -->
+  <link rel="canonical" href="https://angledsugar.github.io/critical-phase-detection-page/ko/">
+  <link rel="alternate" hreflang="en" href="https://angledsugar.github.io/critical-phase-detection-page/">
+  <link rel="alternate" hreflang="ko" href="https://angledsugar.github.io/critical-phase-detection-page/ko/">
+  <link rel="alternate" hreflang="x-default" href="https://angledsugar.github.io/critical-phase-detection-page/">
+
+  <!-- Critical CSS -->
+  <link rel="stylesheet" href="../static/css/bulma.min.css">
+  <link rel="stylesheet" href="../static/css/index.css">
+
+  <!-- Non-critical CSS -->
+  <link rel="preload" href="../static/css/bulma-carousel.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="../static/css/bulma-slider.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="../static/css/fontawesome.all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="../static/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="../static/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="../static/css/fontawesome.all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  </noscript>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Deferred JS -->
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="../static/js/fontawesome.all.min.js"></script>
+  <script defer src="../static/js/bulma-carousel.min.js"></script>
+  <script defer src="../static/js/bulma-slider.min.js"></script>
+  <script defer src="../static/js/index.js"></script>
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "headline": "Self-Supervised Critical Phase Detection for VLA Refinement",
+    "description": "성공적인 시연만으로 결정 단계 — 조작 롤아웃의 결과를 좌우하는 결정 민감 순간 — 를 탐지하여 VLA 정책을 개선합니다.",
+    "inLanguage": "ko",
+    "author": [
+      { "@type": "Person", "name": "Anonymous" }
+    ],
+    "datePublished": "2026",
+    "url": "https://angledsugar.github.io/critical-phase-detection-page/ko/",
+    "keywords": ["비전-언어-행동", "결정 단계", "결정 민감도", "로봇 조작", "강화학습", "LIBERO"]
+  }
+  </script>
+</head>
+<body>
+
+  <!-- Language switch -->
+  <nav class="lang-switch" aria-label="Language">
+    <a href="../">EN</a>
+    <a href="./" class="is-active" aria-current="page">한국어</a>
+  </nav>
+
+  <!-- Scroll to Top Button -->
+  <button class="scroll-to-top" onclick="scrollToTop()" title="맨 위로" aria-label="맨 위로">
+    <i class="fas fa-chevron-up"></i>
+  </button>
+
+  <main id="main-content">
+
+  <!-- Hero / title -->
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">VLA 개선을 위한 자기지도 결정 단계 탐지</h1>
+            <p class="is-size-5 has-text-grey" style="margin-top:-1.25rem;margin-bottom:1.5rem;font-weight:500;">Self-Supervised Critical Phase Detection for VLA Refinement</p>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">익명의 저자</span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">익명 기관</span>
+            </div>
+            <div class="is-size-6 publication-authors" style="margin-top:0.5rem;">
+              <span class="tag is-dark is-medium">프리프린트 &middot; 심사 중 &middot; 2026</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="#" aria-disabled="true" class="external-link button is-normal is-rounded is-dark" style="opacity:0.55;cursor:not-allowed;" onclick="return false;">
+                    <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                    <span>논문 (공개 예정)</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#" aria-disabled="true" class="external-link button is-normal is-rounded is-dark" style="opacity:0.55;cursor:not-allowed;" onclick="return false;">
+                    <span class="icon"><i class="fab fa-github"></i></span>
+                    <span>코드 (게재 시 공개)</span>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Teaser: qualitative demos -->
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <div class="columns is-centered">
+          <div class="column">
+            <video poster="../static/images/demo000.png" controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
+              <source src="../static/videos/demo000.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="column">
+            <video poster="../static/images/demo250.png" controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
+              <source src="../static/videos/demo250.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <p class="has-text-centered is-size-7 has-text-grey">
+          두 LIBERO-Long 롤아웃(&pi;<sub>0.5</sub> 백본)에서 강조 표시된 결정 단계 — 각 롤아웃의 작은 일부에 불과합니다.
+        </p>
+        <p class="subtitle" style="margin:1.75rem 0 0;text-align:left;">
+          <strong>TL;DR.</strong> 비전-언어-행동(VLA) 정책은 조작 작업의 대부분을 무리 없이 수행하지만, 정작 결과를
+          좌우하는 한두 순간에서 실패합니다. 우리는 이러한 순간을 <strong>결정 단계(critical phase)</strong>라고 부르며,
+          실패 가능성이 아니라 <em>결정 민감도</em> — 그 시점의 행동이 결과를 얼마나 크게 뒤바꾸는지 — 로 정의합니다.
+          우리는 이를 <strong>성공적인 시연만으로</strong> 탐지하는 방법을 학습하고, 강화학습 개선을 오직 그 지점에
+          집중합니다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Abstract -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">초록</h2>
+          <div class="content has-text-justified">
+            <p>
+              비전-언어-행동(VLA) 정책은 조작 롤아웃의 대부분을 잘 처리하지만, 정작 중요한 몇몇 결정 — 못이 구멍 안에서
+              처음으로 기울어지는 순간, 잡기가 확정되는 순간 — 에서는 제대로 작동하지 못합니다. 우리는 이러한 순간을
+              <strong>결정 단계(critical phase)</strong>라고 부르며 <strong>결정 민감도</strong>로 정의합니다. 즉, 해당
+              시점의 행동에 가해진 작은 변화가 롤아웃의 최종 성공 또는 실패를 얼마나 크게 뒤바꾸는지를 나타냅니다.
+            </p>
+            <p>
+              결정적으로, 결정 단계는 실패 가능성과 <em>같지 않습니다</em>. 성공적인 롤아웃도 똑같은 결정 지점을 거치므로,
+              <strong>중요도(criticality)는 실패 확률이 아니라 결정 구조 자체의 속성</strong>입니다. 이는 우리의 목표를
+              런타임 실패 탐지와 구분 짓는 기준이 됩니다. 런타임 실패 탐지는 현재 단계가 분포를 얼마나 벗어났는지를
+              측정하므로, 성공할 때는 잠잠하다가 실패가 표면화된 뒤에야 반응합니다.
+            </p>
+            <p>
+              본 연구에서는 실패 레이블이나 작업별 성공 오라클 없이 <strong>성공적인 시연만으로</strong> 결정 단계를
+              탐지하는 방법 — 고정된 정책의 잠재 임베딩과 로봇 상태를 활용 — 과, 강화학습 개선을 바로 그 단계에 집중시켜
+              못 끼우기(peg-in-hole) 같은 정밀 작업이 훨씬 적은 환경 스텝으로 수렴하도록 만드는 방법을 연구합니다.
+              <em>(방법과 실험은 진행 중입니다.)</em>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What is a critical phase -->
+  <section class="section">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">결정 단계란 무엇인가?</h2>
+      <p>
+        정밀 조작은 결정 민감한 몇몇 순간에 달려 있습니다. 구멍에 볼트를 박는 작업(peg-in-hole)을 생각해 봅시다.
+        고전적인 접촉 상태 분해(Mason 1981; Debus et al.)에 따르면, 이 작업은 여러 접촉 영역(contact regime)으로 나뉘며
+        각 영역에서 서로 <em>다른</em> 제어 변수가 결과를 좌우합니다:
+      </p>
+      <ul>
+        <li><strong>접촉&nbsp;1 — 접근(approach).</strong> 너무 빨리 움직이면 관성이 자기력을 이겨 볼트가 드라이버에서
+          떨어집니다. <em>속도</em>가 결정적입니다.</li>
+        <li><strong>접촉&nbsp;2 — 표면 접촉(surface touch).</strong> 너무 세게 누르면 볼트가 튕겨 나갑니다.
+          <em>접촉력</em>이 결정적입니다.</li>
+        <li><strong>접촉&nbsp;3 — 림 정렬(rim alignment).</strong> 볼트는 구멍의 수직(normal) 방향을 따라 움직여야
+          합니다. <em>수직 정렬</em>이 결정적입니다.</li>
+        <li><strong>접촉&nbsp;4 — 안착(seating).</strong> 볼트를 체결하려면 얼마나 돌리고 얼마나 눌러야 하는지.
+          <em>토크</em>가 결정적입니다.</li>
+      </ul>
+      <p>
+        각 영역에서 작은 행동 오류 하나가 이후 모든 것의 성공과 실패를 가릅니다. 이러한 구간은 역사적으로 수작업으로
+        구분하고 이름 붙여 왔습니다. 우리는 대신 이를 <strong>조작적으로(operationally)</strong> 정의합니다. 즉, 결정
+        단계란 행동에 가한 교란이 결과를 측정 가능할 만큼 뒤바꾸는 시점입니다.
+      </p>
+
+      <h3 class="title is-5" style="margin-top:1.5rem;">중요도는 실패 확률이 아니다</h3>
+      <div class="table-container">
+        <table class="table is-bordered is-striped is-fullwidth">
+          <thead>
+            <tr>
+              <th></th>
+              <th>실패 탐지</th>
+              <th>결정 단계 (제안 방법)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>질문</strong></td>
+              <td>이번 롤아웃은 실패할까?</td>
+              <td>결과는 어디서 결정되는가?</td>
+            </tr>
+            <tr>
+              <td><strong>신호 출처</strong></td>
+              <td>현재 단계의 OOD / 불확실성</td>
+              <td>현재 행동의 결정 민감도</td>
+            </tr>
+            <tr>
+              <td><strong>성공 롤아웃에서</strong></td>
+              <td>평탄하게 유지됨 — 아무 문제 없어 보임</td>
+              <td>여전히 반응함 — 성공도 결정 지점을 거치기 때문</td>
+            </tr>
+            <tr>
+              <td><strong>타이밍</strong></td>
+              <td>실패가 표면화된 후 (증상)</td>
+              <td>실패가 돌이킬 수 없게 되기 전 (원인)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        결정 단계는 성공적인 실행 내부에 존재하므로 <strong>성공 데이터만으로</strong> 학습할 수 있으며,
+        <em>공간적으로 겹치는(spatially-overlapping)</em> 실패 — 성공 매니폴드를 벗어나지 않아 밀도/OOD 기반
+        탐지기로는 보이지 않는 실패 — 의 결정 지점을 정확히 짚어냅니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- Contributions -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">기여</h2>
+      <div class="columns">
+        <div class="column">
+          <h3 class="title is-5">1. 정의와 탐지</h3>
+          <p>결정 단계를 <strong>결정 민감도</strong>로 공식화하고, 성공 롤아웃만으로 학습한 시점별 점수
+            <em>c<sub>t</sub></em>를 제시합니다. 이는 <em>반사실적(counterfactual)</em> 실제 결정성 — 시뮬레이션에서
+            시점 <em>t</em>의 행동을 바꿨을 때 결과가 뒤집히는 비율 — 과 비교해 검증됩니다.</p>
+        </div>
+        <div class="column">
+          <h3 class="title is-5">2. 중요도 &ne; 실패</h3>
+          <p><em>c<sub>t</sub></em>가 실패 확률이 아니라는 직접적 증거: 실패 탐지기가 평탄한 성공 롤아웃에서도
+            반응하며, 기존 탐지기가 놓치는 공간적으로 겹치는 실패의 결정 지점을 포착합니다. LIBERO에서
+            <strong>FAIL-Detect, FIPER, SAFE</strong>와 직접 비교합니다.</p>
+        </div>
+        <div class="column">
+          <h3 class="title is-5">3. 국소화된 RL 개선</h3>
+          <p>탐지된 결정 단계에 강화학습 개선을 집중하면 고정된 VLA의 정밀 작업 수렴이 빨라져, 균일한 RL
+            미세조정(<strong>VLA-RL, SimpleVLA-RL</strong>)보다 높은 샘플 효율을 달성합니다.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Intervention probe -->
+  <section class="section">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">단계 안에서 행동하기: 개입 프로브 <span class="tag is-warning is-medium">예비</span></h2>
+      <p>
+        탐지된 단계를 <em>사용</em>하는 첫 시도입니다. 런타임 실패 확률 탐지기(&pi;<sub>0.5</sub> 잠재값 위의 LSTM,
+        SAFE 방식)에 가벼운 negate-replay 개입을 붙여, 점수가 치솟을 때마다 개입하도록 했습니다. 아래 각 영상은
+        <strong>기준 롤아웃(왼쪽)</strong>과 <strong>동일 롤아웃에 개입을 적용한 경우(오른쪽)</strong>이며, 실패 점수를
+        함께 표시했습니다.
+      </p>
+      <p>
+        <strong>설정.</strong> 고정된 &pi;<sub>0.5</sub>로 LIBERO-Long의 <code>put_both_moka_pots_on_the_stove</code>(index 3)
+        작업을 10~50회 실행해 롤아웃을 모으고, 그 위에서 SAFE-LSTM을 학습합니다. 추론 시 점수가 임계값을 넘으면 직전
+        action chunk로 되돌려(replay) 개입합니다.
+      </p>
+      <div class="columns is-centered">
+        <div class="column">
+          <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
+            <source src="../static/videos/safe_recovered.mp4" type="video/mp4">
+          </video>
+          <p class="has-text-centered"><span class="tag is-success">RECOVERED</span>&nbsp; 기준은 실패 &rarr; 개입이 롤아웃을 구해냅니다.</p>
+        </div>
+        <div class="column">
+          <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
+            <source src="../static/videos/safe_broken.mp4" type="video/mp4">
+          </video>
+          <p class="has-text-centered"><span class="tag is-danger">BROKEN</span>&nbsp; 기준은 성공 &rarr; 같은 트리거가 멀쩡한 단계에서 작동해 망칩니다.</p>
+        </div>
+      </div>
+      <p>
+        이 점이 본 연구의 핵심입니다. 개입은 실제 실패를 구해낼 수 <em>있지만</em>(왼쪽), 실패 확률 트리거는 멀쩡한
+        단계에서도 잘못 작동합니다(오른쪽). <em>실패가 얼마나 그럴듯해 보이는지</em>가 아니라 <em>결과가 실제로
+        결정되는 지점</em> — 즉 중요도(criticality) — 에 따라 개입해야 이러한 개입이 안정적으로 순이득이 됩니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- Positioning -->
+  <section class="section">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">선행 연구와의 관계</h2>
+      <p>
+        <strong>런타임 실패 탐지</strong> — FAIL-Detect (Xu et al., RSS 2025), FIPER (Römer et al., NeurIPS 2025),
+        SAFE (Gu et al., NeurIPS 2025) — 는 OOD나 불확실성 신호로 경보를 울립니다. 이들은 <em>탐지 전용</em>이며 실패
+        확률을 측정합니다. 우리는 대신 성공적인 롤아웃 내부의 결정 구조를 식별하고 이를 정책 개선과 연결합니다.
+        LIBERO에서 failure-AUROC로 직접 비교합니다.
+      </p>
+      <p>
+        <strong>임계 스텝 / 임계 순간(critical-step / critical-moment)</strong> — Liu (ICCV 2023), Tang (2026),
+        Mao / JITI (2025), Kappler (RSS 2015) — 는 각각 리턴 다양성, 보정 단계의 실패 레이블, 정책 토큰 로짓, 공간
+        특징, 혹은 품질이 섞인 시연을 요구합니다. 우리의 설정은 <em>성공 데이터만</em>, 표현 수준(representation-level),
+        그리고 시간적(temporal)이며, 정책에 구애받지 않습니다(토큰 로짓 불필요).
+      </p>
+    </div>
+  </section>
+
+  <!-- Method & experiments (in progress) -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">방법과 실험 <span class="tag is-warning is-medium">진행 중</span></h2>
+      <p>탐지기와 결정 단계 국소화 RL 개선기는 활발히 개발 중입니다. 평가 계획은 다음과 같습니다:</p>
+      <div class="table-container">
+        <table class="table is-bordered is-fullwidth">
+          <tbody>
+            <tr><td><strong>테스트베드</strong></td><td>LIBERO(정량 핵심) + 접촉이 많은 삽입 작업(정성); 시뮬레이션 반사실 롤아웃이 선택 작업에서 실제 결정성을 제공.</td></tr>
+            <tr><td><strong>백본</strong></td><td>고정된 VLA — &pi;<sub>0.5</sub>, &pi;<sub>0</sub>, OpenVLA — 를 잠재 임베딩 + 로봇 상태로 읽음. 정책 가중치는 갱신하지 않음.</td></tr>
+            <tr><td><strong>핵심 지표</strong></td><td>(i) 반사실 실제값과의 결정 민감도 정합; (ii) 평탄한 실패 탐지기 대비 성공 롤아웃에서의 신호; (iii) 결정 단계 전용 개선에서의 RL 샘플 효율.</td></tr>
+            <tr><td><strong>보조</strong></td><td>보고된 베이스라인 대비 홀드아웃 failure-AUROC; 작업 간 전이.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="is-size-7 has-text-grey">실험이 완료되는 대로 수치를 게시하겠습니다.</p>
+    </div>
+  </section>
+
+  <!-- BibTeX -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <div class="bibtex-header">
+        <h2 class="title">BibTeX</h2>
+        <button class="copy-bibtex-btn" onclick="copyBibTeX()" title="BibTeX를 클립보드에 복사">
+          <i class="fas fa-copy"></i>
+          <span class="copy-text">Copy</span>
+        </button>
+      </div>
+      <pre id="bibtex-code"><code>@article{anonymous2026cpd,
+  title   = {Self-Supervised Critical Phase Detection for VLA Refinement},
+  author  = {Anonymous},
+  journal = {Preprint},
+  year    = {2026},
+  note    = {Under review},
+}</code></pre>
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              이 페이지는 <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>(<a href="https://nerfies.github.io" target="_blank">Nerfies</a> 프로젝트 페이지에서 차용)을 사용해 제작되었습니다.
+              본 웹사이트는 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">크리에이티브 커먼즈 저작자표시-동일조건변경허락 4.0 국제 라이선스</a>를 따릅니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
