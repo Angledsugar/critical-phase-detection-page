@@ -310,33 +310,35 @@
       <h2 class="title is-3">단계 안에서 행동하기: 개입 프로브 <span class="tag is-warning is-medium">예비</span></h2>
       <p>
         탐지된 단계를 <em>사용</em>하는 첫 시도입니다. 런타임 실패 확률 탐지기(&pi;<sub>0.5</sub> 잠재값 위의 LSTM,
-        SAFE 방식)에 가벼운 negate-replay 개입을 붙여, 점수가 치솟을 때마다 개입하도록 했습니다. 아래 각 영상은
-        <strong>기준 롤아웃(왼쪽)</strong>과 <strong>동일 롤아웃에 개입을 적용한 경우(오른쪽)</strong>이며, 실패 점수를
-        함께 표시했습니다.
+        SAFE 방식)에 가벼운 negate-replay 개입을 붙이고, 성공 롤아웃들로 보정한 <strong>task별 functional conformal
+        임계곡선</strong> &delta;<sub>t</sub>를 점수가 넘는 순간 개입하도록 했습니다. 아래 각 영상은
+        <strong>기준 롤아웃(왼쪽)</strong>과 <strong>동일 롤아웃에 개입을 적용한 경우(오른쪽)</strong>이며, 실패 점수와
+        &delta;<sub>t</sub>를 함께 표시했습니다.
       </p>
       <p>
-        <strong>설정.</strong> 고정된 &pi;<sub>0.5</sub>로 LIBERO-Long의 <code>put_both_moka_pots_on_the_stove</code>(index 3)
-        작업을 10~50회 실행해 롤아웃을 모으고, 그 위에서 SAFE-LSTM을 학습합니다. 추론 시 점수가 임계값을 넘으면 직전
-        action chunk로 되돌려(replay) 개입합니다.
+        <strong>설정.</strong> 고정된 &pi;<sub>0.5</sub>로 LIBERO 4개 suite의 롤아웃 400편(실패 14편)을 모아 z-feature
+        위에서 SAFE-LSTM을 학습하고, task별 성공 곡선으로 &delta;<sub>t</sub>를 보정합니다. 추론 시 점수가
+        &delta;<sub>t</sub>를 넘으면 직전 action chunk를 되감아(negate-replay) 개입합니다. 아래 영상의 작업은
+        LIBERO-Long의 <code>put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate</code>(index 8)입니다.
       </p>
       <div class="columns is-centered">
         <div class="column">
           <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
-            <source src="../static/videos/safe_recovered.mp4" type="video/mp4">
+            <source src="../static/videos/safe_band_ep002.mp4" type="video/mp4">
           </video>
-          <p class="has-text-centered"><span class="tag is-success">RECOVERED</span>&nbsp; 기준은 실패 &rarr; 개입이 롤아웃을 구해냅니다.</p>
+          <p class="has-text-centered"><span class="tag is-warning">LATE ALARM</span>&nbsp; 실패 점수가 t&asymp;366/520(에피소드의 약 70%)까지 성공 밴드 안에 머뭅니다 &mdash; 알람은 실패가 이미 진행된 뒤에야 울립니다.</p>
         </div>
         <div class="column">
           <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
-            <source src="../static/videos/safe_broken.mp4" type="video/mp4">
+            <source src="../static/videos/safe_band_ep009.mp4" type="video/mp4">
           </video>
-          <p class="has-text-centered"><span class="tag is-danger">BROKEN</span>&nbsp; 기준은 성공 &rarr; 같은 트리거가 멀쩡한 단계에서 작동해 망칩니다.</p>
+          <p class="has-text-centered"><span class="tag is-warning">TOO LATE TO ACT</span>&nbsp; 세 번의 되감기 개입이 모두 분기점 이후에 발동 &mdash; 롤아웃은 여전히 실패합니다.</p>
         </div>
       </div>
       <p>
-        이 점이 본 연구의 핵심입니다. 개입은 실제 실패를 구해낼 수 <em>있지만</em>(왼쪽), 실패 확률 트리거는 멀쩡한
-        단계에서도 잘못 작동합니다(오른쪽). <em>실패가 얼마나 그럴듯해 보이는지</em>가 아니라 <em>결과가 실제로
-        결정되는 지점</em> — 즉 중요도(criticality) — 에 따라 개입해야 이러한 개입이 안정적으로 순이득이 됩니다.
+        이 점이 본 연구의 핵심입니다. 제대로 보정된 임계값에서도 정책 잠재값 위의 실패 확률 신호는 실패가 이미
+        진행된 뒤에야 울립니다 — 개입하기에는 너무 늦습니다. <em>실패가 얼마나 그럴듯해 보이는지</em>가 아니라
+        <em>결과가 실제로 결정되는 지점</em> — 즉 critical phase — 에서 행동하는 것이 이러한 개입에 필요한 능력입니다.
       </p>
     </div>
   </section>

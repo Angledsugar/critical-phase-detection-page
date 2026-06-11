@@ -313,29 +313,30 @@
       <h2 class="title is-3">Acting inside the phase: an intervention probe <span class="tag is-warning is-medium">preliminary</span></h2>
       <p>
         A first test of <em>using</em> a detected phase. We attach a lightweight negate-replay intervention to a
-        runtime failure-probability detector (an LSTM over the &pi;<sub>0.5</sub> latent, SAFE-style) and let it act
-        whenever the score spikes. Each clip below is the <strong>baseline rollout (left)</strong> versus
-        <strong>the same rollout with intervention (right)</strong>, with the failure score overlaid.
+        runtime failure-probability detector (an LSTM over the &pi;<sub>0.5</sub> latent, SAFE-style), triggered when
+        the score crosses a <strong>per-task functional conformal threshold</strong> &delta;<sub>t</sub> calibrated on
+        successful rollouts. Each clip below is the <strong>baseline rollout (left)</strong> versus
+        <strong>the same rollout with intervention (right)</strong>, with the failure score and &delta;<sub>t</sub> overlaid.
       </p>
       <div class="columns is-centered">
         <div class="column">
           <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
-            <source src="static/videos/safe_recovered.mp4" type="video/mp4">
+            <source src="static/videos/safe_band_ep002.mp4" type="video/mp4">
           </video>
-          <p class="has-text-centered"><span class="tag is-success">RECOVERED</span>&nbsp; baseline fails &rarr; intervention rescues the rollout.</p>
+          <p class="has-text-centered"><span class="tag is-warning">LATE ALARM</span>&nbsp; the failure score stays inside the success band until t&asymp;366/520 (&sim;70% of the episode) &mdash; the alarm fires only once the failure is already unfolding.</p>
         </div>
         <div class="column">
           <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
-            <source src="static/videos/safe_broken.mp4" type="video/mp4">
+            <source src="static/videos/safe_band_ep009.mp4" type="video/mp4">
           </video>
-          <p class="has-text-centered"><span class="tag is-danger">BROKEN</span>&nbsp; baseline succeeds &rarr; the same trigger fires on a healthy step and breaks it.</p>
+          <p class="has-text-centered"><span class="tag is-warning">TOO LATE TO ACT</span>&nbsp; three negate-replay reversals fire, all past the fork &mdash; the rollout still fails.</p>
         </div>
       </div>
       <p>
-        The takeaway is the point of this work: the intervention <em>can</em> rescue genuine failures (left), but a
-        failure-probability trigger also misfires on healthy steps (right). Acting on <em>where the outcome is
-        actually being decided</em> — criticality — rather than on <em>how likely failure looks</em> is what should
-        make such intervention reliably net-positive.
+        The takeaway is the point of this work: even with a <em>valid</em>, per-task calibrated threshold, a
+        failure-probability signal on the policy's latent fires only once failure is already in progress — too late
+        for the intervention to help. Acting on <em>where the outcome is actually being decided</em> — the critical
+        phase, upstream of failure — rather than on <em>how likely failure looks</em> is what such intervention needs.
       </p>
     </div>
   </section>
