@@ -169,9 +169,7 @@
         <p class="subtitle" style="margin:1.75rem 0 0;text-align:left;">
           <strong>TL;DR.</strong> A Vision-Language-Action policy nails most of a manipulation task, then fails on the
           one or two moments that actually decide it. We call those <strong>critical phases</strong> and define them
-          by <em>decision sensitivity</em> — how much the action there flips the outcome, <em>not</em> how likely
-          failure looks. We learn to detect them from <strong>successful demonstrations alone</strong> and
-          concentrate reinforcement-learning refinement only there.
+          by <em>decision sensitivity</em> — how much a small change to the action there flips the eventual outcome.
         </p>
       </div>
     </div>
@@ -199,11 +197,14 @@
               successes and reacts only after a failure has surfaced.
             </p>
             <p>
-              We study how to detect critical phases from <strong>successful demonstrations alone</strong> — no
-              failure labels and no per-task success oracle — using the frozen policy's latent embedding and the
-              robot state, and how to concentrate reinforcement-learning refinement on exactly those phases so that
-              precision tasks such as peg-in-hole converge with far fewer environment steps.
-              <em>(Method and experiments in progress.)</em>
+              We study how to detect critical phases without failure labels and without a per-task success oracle, by
+              combining two signals of very different character. A <strong>force/torque (F/T) sensor</strong> measures
+              contact force and torque directly, so it catches the moments contact begins or breaks at far lower
+              latency than inferring them from camera images — but it has no idea which task, or which part of one,
+              is underway. The <strong>VLA's generalization</strong> reads what the current scene is about even as
+              tasks, objects, and layouts change — but it is slow to react to events as brief as a contact transition.
+              The first pins down <em>when</em> something changed; the second attaches <em>which decision, in which
+              phase</em>, that change belongs to. <em>(Method and experiments in progress.)</em>
             </p>
           </div>
         </div>
@@ -232,55 +233,60 @@
       </ul>
       <p>
         In each regime a small action error decides the success or failure of everything that follows. These
-        intervals have historically been carved out and labeled by hand. We instead define them
-        <strong>operationally</strong>: a critical phase is a timestep where perturbing the action measurably flips
-        the outcome.
+        intervals have historically been carved out and labeled by hand. We automate that in two steps:
       </p>
+      <ol>
+        <li><strong>Phase segmentation.</strong> The VLA's generalization splits a rollout into phases. Boundaries
+          like approach, contact, alignment and seating fall out without hand-written rules per task.</li>
+        <li><strong>Aligning with the failure distribution.</strong> We lay the points where the VLA failed on top of
+          those phases and count how the failures spread across them. When failures pile up in one phase, we mark
+          that phase as a <strong>critical phase</strong>.</li>
+      </ol>
+    </div>
+  </section>
 
-      <h3 class="title is-5" style="margin-top:1.5rem;">Criticality is not failure probability</h3>
-      <div class="table-container">
-        <table class="table is-bordered is-striped is-fullwidth">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Failure detection</th>
-              <th>Critical phase (ours)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Question</strong></td>
-              <td>Is this rollout going to fail?</td>
-              <td>Where is the outcome being decided?</td>
-            </tr>
-            <tr>
-              <td><strong>Signal source</strong></td>
-              <td>OOD / uncertainty of the current step</td>
-              <td>Decision sensitivity of the current action</td>
-            </tr>
-            <tr>
-              <td><strong>On a success rollout</strong></td>
-              <td>Stays flat — nothing looks wrong</td>
-              <td>Still fires — successes pass through the decision point too</td>
-            </tr>
-            <tr>
-              <td><strong>Timing</strong></td>
-              <td>After the failure has surfaced (a symptom)</td>
-              <td>Before the failure is irreversible (the cause)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <!-- Why critical phases -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">Why critical phases?</h2>
       <p>
-        Because criticality lives inside successful executions, it can be learned from <strong>success-only</strong>
-        data, and it pinpoints <em>spatially-overlapping</em> failures — ones that never leave the success manifold
-        and so are invisible to density-/OOD-based detectors.
+        Improving a <strong>frozen VLA</strong> — a pretrained policy whose weights are left untouched, with only a
+        small module trained on top — has so far taken one of three routes:
+      </p>
+      <ul>
+        <li><strong>Spread RL uniformly over the whole rollout (SimpleVLA-RL).</strong> Reward comes from episode
+          success alone and every timestep is swept the same way. With no idea where the trouble is, the budget gets
+          spread evenly across the entire rollout.</li>
+        <li><strong>Have an expert rebuild the data (DAgger).</strong> Roll the policy out, have an expert label the
+          correct action on the states it actually visited, add those to the dataset, retrain. When the labeling
+          stops, so does the improvement.</li>
+        <li><strong>Have a human designate the segment and run RL only there (RLT).</strong> A lightweight
+          actor-critic head sits on a compact readout — the RL token — from the frozen VLA and trains online on a
+          real robot. Across four real-robot tasks (screw installation, zip-tie fastening, charger insertion,
+          Ethernet insertion) it speeds up the hardest segment by up to 3&times;.</li>
+      </ul>
+      <p>
+        <strong>RLT already validates the premise of this work:</strong> concentrate the budget on the hard segment
+        and the policy really does improve fast. The catch is that a human picks the segment. RLT marks the
+        insertion / fastening / rotation segment up front, a human operator chooses at which point in each episode to
+        hand control from the base VLA to the RL policy, a human labels every episode success or failure at the end
+        (<em>r<sub>T</sub></em> = 1 or 0), and a human takes over by teleoperation when the robot gets stuck.
+      </p>
+      <p>
+        All three stall in the same place: <strong>the system cannot tell on its own when or where things go
+        wrong.</strong> The first doesn't know, so it searches the whole rollout; the other two are told by a human.
+        Try to close the loop so that the VLA improves itself, and an expert is still standing inside the loop.
+      </p>
+      <p>
+        This is the gap critical phase detection fills. Once the system can point out <em>where the outcome is being
+        decided</em> by itself, the "hand over to RL here" moment that RLT asks a human for comes for free — and the
+        human steps out of the loop.
       </p>
     </div>
   </section>
 
   <!-- Contributions -->
-  <section class="section hero is-light">
+  <section class="section">
     <div class="container is-max-desktop content">
       <h2 class="title is-3">Contributions</h2>
       <div class="columns">
@@ -304,78 +310,6 @@
             (<strong>VLA-RL, SimpleVLA-RL</strong>).</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Intervention probe -->
-  <section class="section">
-    <div class="container is-max-desktop content">
-      <h2 class="title is-3">Acting inside the phase: an intervention probe <span class="tag is-warning is-medium">preliminary</span></h2>
-      <p>
-        A first test of <em>using</em> a detected phase. We attach a lightweight negate-replay intervention to a
-        runtime failure-probability detector (an LSTM over the &pi;<sub>0.5</sub> latent, SAFE-style), triggered when
-        the score crosses a <strong>per-task functional conformal threshold</strong> &delta;<sub>t</sub> calibrated on
-        successful rollouts. Each clip below is the <strong>baseline rollout (left)</strong> versus
-        <strong>the same rollout with intervention (right)</strong>, with the failure score and &delta;<sub>t</sub> overlaid.
-      </p>
-      <div class="columns is-centered">
-        <div class="column">
-          <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
-            <source src="static/videos/safe_band_ep002.mp4" type="video/mp4">
-          </video>
-          <p class="has-text-centered"><span class="tag is-warning">LATE ALARM</span>&nbsp; the failure score stays inside the success band until t&asymp;366/520 (&sim;70% of the episode) &mdash; the alarm fires only once the failure is already unfolding.</p>
-        </div>
-        <div class="column">
-          <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
-            <source src="static/videos/safe_band_ep009.mp4" type="video/mp4">
-          </video>
-          <p class="has-text-centered"><span class="tag is-warning">TOO LATE TO ACT</span>&nbsp; three negate-replay reversals fire, all past the fork &mdash; the rollout still fails.</p>
-        </div>
-      </div>
-      <p>
-        The takeaway is the point of this work: even with a <em>valid</em>, per-task calibrated threshold, a
-        failure-probability signal on the policy's latent fires only once failure is already in progress — too late
-        for the intervention to help. Acting on <em>where the outcome is actually being decided</em> — the critical
-        phase, upstream of failure — rather than on <em>how likely failure looks</em> is what such intervention needs.
-      </p>
-    </div>
-  </section>
-
-  <!-- Positioning -->
-  <section class="section">
-    <div class="container is-max-desktop content">
-      <h2 class="title is-3">How it relates to prior work</h2>
-      <p>
-        <strong>Runtime failure detection</strong> — FAIL-Detect (Xu et al., RSS 2025), FIPER (Römer et al.,
-        NeurIPS 2025), SAFE (Gu et al., NeurIPS 2025) — raises an alarm from OOD or uncertainty signals. These are
-        <em>detection-only</em> and measure failure probability; we instead identify the decision structure inside
-        successful rollouts and connect it to policy refinement. We compare directly on LIBERO using failure-AUROC.
-      </p>
-      <p>
-        <strong>Critical-step / critical-moment</strong> — Liu (ICCV 2023), Tang (2026), Mao / JITI (2025),
-        Kappler (RSS 2015) — variously require return diversity, failure labels at calibration, policy token
-        logits, spatial features, or mixed-quality demonstrations. Our setting is <em>success-only</em>,
-        representation-level, and temporal, and remains policy-agnostic (no token logits).
-      </p>
-    </div>
-  </section>
-
-  <!-- Method & experiments (in progress) -->
-  <section class="section hero is-light">
-    <div class="container is-max-desktop content">
-      <h2 class="title is-3">Method &amp; experiments <span class="tag is-warning is-medium">in progress</span></h2>
-      <p>The detector and the critical-phase-localized RL refiner are under active development. The evaluation plan:</p>
-      <div class="table-container">
-        <table class="table is-bordered is-fullwidth">
-          <tbody>
-            <tr><td><strong>Testbed</strong></td><td>LIBERO (quantitative headline) + a contact-rich insertion task (qualitative); sim counterfactual rollouts give ground-truth decisiveness on selected tasks.</td></tr>
-            <tr><td><strong>Backbones</strong></td><td>Frozen VLA — &pi;<sub>0.5</sub>, &pi;<sub>0</sub>, OpenVLA — read via latent embedding + robot state. Policy weights are not updated.</td></tr>
-            <tr><td><strong>Headline metrics</strong></td><td>(i) decision-sensitivity alignment with counterfactual ground truth; (ii) signal on success rollouts vs. flat failure detectors; (iii) RL sample-efficiency under critical-phase-only refinement.</td></tr>
-            <tr><td><strong>Auxiliary</strong></td><td>Held-out failure-AUROC vs. reported baselines; cross-task transfer.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="is-size-7 has-text-grey">Numbers will be posted as experiments complete.</p>
     </div>
   </section>
 

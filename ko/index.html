@@ -170,11 +170,9 @@
           두 LIBERO-Long 롤아웃(&pi;<sub>0.5</sub> 백본)에서 강조 표시된 결정 단계 — 각 롤아웃의 작은 일부에 불과합니다.
         </p>
         <p class="subtitle" style="margin:1.75rem 0 0;text-align:left;">
-          <strong>TL;DR.</strong> 비전-언어-행동(VLA) 정책은 조작 작업의 대부분을 무리 없이 수행하지만, 정작 결과를
-          좌우하는 한두 순간에서 실패합니다. 우리는 이러한 순간을 <strong>결정 단계(critical phase)</strong>라고 부르며,
-          실패 가능성이 아니라 <em>결정 민감도</em> — 그 시점의 행동이 결과를 얼마나 크게 뒤바꾸는지 — 로 정의합니다.
-          우리는 이를 <strong>성공적인 시연만으로</strong> 탐지하는 방법을 학습하고, 강화학습 개선을 오직 그 지점에
-          집중합니다.
+          <strong>TL;DR.</strong> 비전-언어-행동(VLA) 정책은 조작 작업의 대부분을 무리 없이 수행하지만, 정작 성패를
+          가르는 한두 순간에서 무너집니다. 우리는 그 순간을 <strong>결정 단계(critical phase)</strong>라고 부르며,
+          <em>결정 민감도</em> — 그 시점의 행동을 조금 바꿨을 때 최종 성패가 얼마나 뒤집히는지 — 로 정의합니다.
         </p>
       </div>
     </div>
@@ -200,9 +198,12 @@
               측정하므로, 성공할 때는 잠잠하다가 실패가 표면화된 뒤에야 반응합니다.
             </p>
             <p>
-              본 연구에서는 실패 레이블이나 작업별 성공 오라클 없이 <strong>성공적인 시연만으로</strong> 결정 단계를
-              탐지하는 방법 — 고정된 정책의 잠재 임베딩과 로봇 상태를 활용 — 과, 강화학습 개선을 바로 그 단계에 집중시켜
-              못 끼우기(peg-in-hole) 같은 정밀 작업이 훨씬 적은 환경 스텝으로 수렴하도록 만드는 방법을 연구합니다.
+              본 연구에서는 실패 레이블도, 작업별 성공 오라클도 없이 결정 단계를 탐지하는 방법을 연구합니다. 성질이
+              다른 두 신호를 합칩니다. <strong>F/T 센서(force/torque sensor)</strong>는 접촉력과 토크를 직접 재기
+              때문에, 접촉이 시작되거나 끊기는 순간을 카메라 영상에서 추론할 때보다 훨씬 짧은 지연으로 잡아냅니다.
+              대신 지금이 무슨 작업의 어느 대목인지는 모릅니다. <strong>VLA의 일반화 능력</strong>은 작업·물체·배치가
+              바뀌어도 지금 장면이 어떤 상황인지를 읽어냅니다. 대신 접촉 전이처럼 짧은 사건에는 반응이 느립니다.
+              앞이 <em>언제</em> 무언가 바뀌었는지를 짚고, 뒤가 그 변화가 <em>어느 국면의 어떤 결정인지</em>를 붙입니다.
               <em>(방법과 실험은 진행 중입니다.)</em>
             </p>
           </div>
@@ -231,55 +232,56 @@
           <em>토크</em>가 결정적입니다.</li>
       </ul>
       <p>
-        각 영역에서 작은 행동 오류 하나가 이후 모든 것의 성공과 실패를 가릅니다. 이러한 구간은 역사적으로 수작업으로
-        구분하고 이름 붙여 왔습니다. 우리는 대신 이를 <strong>조작적으로(operationally)</strong> 정의합니다. 즉, 결정
-        단계란 행동에 가한 교란이 결과를 측정 가능할 만큼 뒤바꾸는 시점입니다.
+        각 영역에서 작은 행동 오차 하나가 이후 모든 것의 성패를 가릅니다. 이러한 구간은 그동안 사람이 손으로 잘라내고
+        이름을 붙여 왔습니다. 우리는 이를 두 단계로 자동화합니다.
       </p>
+      <ol>
+        <li><strong>국면 분할.</strong> VLA의 일반화 능력으로 롤아웃을 국면으로 쪼갭니다. 작업마다 규칙을 새로 짜지
+          않아도 접근·접촉·정렬·안착 같은 경계가 나옵니다.</li>
+        <li><strong>실패 분포와 맞추기(align).</strong> 이렇게 나온 국면 위에 VLA가 실패한 지점을 얹어, 실패가 어느
+          국면에 몰리는지 셉니다. 실패가 특정 국면에 쏠리면 그 국면을 <strong>결정 단계</strong>로 지목합니다.</li>
+      </ol>
+    </div>
+  </section>
 
-      <h3 class="title is-5" style="margin-top:1.5rem;">중요도는 실패 확률이 아니다</h3>
-      <div class="table-container">
-        <table class="table is-bordered is-striped is-fullwidth">
-          <thead>
-            <tr>
-              <th></th>
-              <th>실패 탐지</th>
-              <th>결정 단계 (제안 방법)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>질문</strong></td>
-              <td>이번 롤아웃은 실패할까?</td>
-              <td>결과는 어디서 결정되는가?</td>
-            </tr>
-            <tr>
-              <td><strong>신호 출처</strong></td>
-              <td>현재 단계의 OOD / 불확실성</td>
-              <td>현재 행동의 결정 민감도</td>
-            </tr>
-            <tr>
-              <td><strong>성공 롤아웃에서</strong></td>
-              <td>평탄하게 유지됨 — 아무 문제 없어 보임</td>
-              <td>여전히 반응함 — 성공도 결정 지점을 거치기 때문</td>
-            </tr>
-            <tr>
-              <td><strong>타이밍</strong></td>
-              <td>실패가 표면화된 후 (증상)</td>
-              <td>실패가 돌이킬 수 없게 되기 전 (원인)</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <!-- Why critical phases -->
+  <section class="section hero is-light">
+    <div class="container is-max-desktop content">
+      <h2 class="title is-3">결정 단계가 왜 필요한가?</h2>
       <p>
-        결정 단계는 성공적인 실행 내부에 존재하므로 <strong>성공 데이터만으로</strong> 학습할 수 있으며,
-        <em>공간적으로 겹치는(spatially-overlapping)</em> 실패 — 성공 매니폴드를 벗어나지 않아 밀도/OOD 기반
-        탐지기로는 보이지 않는 실패 — 의 결정 지점을 정확히 짚어냅니다.
+        <strong>고정된(frozen) VLA</strong> — 사전학습된 정책의 가중치는 건드리지 않고 그 위에 얹은 작은 모듈만
+        학습하는 설정 — 를 개선하는 길은 지금까지 셋이었습니다.
+      </p>
+      <ul>
+        <li><strong>롤아웃 전체에 균등하게 RL을 겁니다(SimpleVLA-RL).</strong> 에피소드 성패만 보상으로 주고 모든
+          타임스텝을 똑같이 훑습니다. 어디가 문제인지 모르니 전 구간에 예산을 균등하게 뿌릴 수밖에 없습니다.</li>
+        <li><strong>전문가가 데이터를 다시 만듭니다(DAgger).</strong> 정책을 굴려 보고, 그 정책이 실제로 방문한 상태에
+          전문가가 올바른 행동을 라벨링해 데이터셋에 얹은 뒤 다시 학습합니다. 사람이 라벨링을 멈추면 개선도
+          멈춥니다.</li>
+        <li><strong>사람이 구간을 지정하고 거기서만 RL을 돌립니다(RLT).</strong> 고정된 VLA에서 뽑은 압축 표현(RL
+          token) 위에 가벼운 actor-critic을 얹어 실물 로봇에서 온라인으로 학습합니다. 네 개 실물 작업(나사 조립,
+          케이블 타이 체결, 충전기 삽입, 이더넷 삽입)에서 가장 어려운 구간의 속도를 최대 3배까지 끌어올렸습니다.</li>
+      </ul>
+      <p>
+        <strong>RLT는 이 연구의 전제를 이미 검증해 줍니다.</strong> 예산을 어려운 구간에 몰아주면 정말로 빨리 늡니다.
+        문제는 그 구간을 사람이 정한다는 것입니다. RLT는 삽입·체결·회전 구간을 미리 짚어 두고, 에피소드마다 사람이
+        어느 시점에 base VLA에서 RL 정책으로 제어권을 넘길지 고르고, 끝나면 성공·실패를 손으로 라벨링하고
+        (<em>r<sub>T</sub></em> = 1 또는 0), 로봇이 막히면 텔레오퍼레이션으로 개입합니다.
+      </p>
+      <p>
+        셋이 같은 곳에서 막힙니다. <strong>언제·어디서 문제가 생기는지를 시스템 스스로는 모릅니다.</strong> 첫째는
+        몰라서 전 구간을 다 뒤지고, 나머지 둘은 사람이 보고 짚어 줍니다. VLA가 스스로 나아지는 루프를 돌리려 해도
+        루프 안에 전문가가 남습니다.
+      </p>
+      <p>
+        결정 단계 탐지가 메우려는 자리가 여기입니다. <em>어디서 결과가 갈리는지</em>를 시스템이 스스로 짚어내면,
+        RLT가 사람에게 물어보던 "여기서부터 RL로 넘겨라" 지점을 자동으로 얻고, 사람은 루프 밖으로 나갑니다.
       </p>
     </div>
   </section>
 
   <!-- Contributions -->
-  <section class="section hero is-light">
+  <section class="section">
     <div class="container is-max-desktop content">
       <h2 class="title is-3">기여</h2>
       <div class="columns">
@@ -301,83 +303,6 @@
             미세조정(<strong>VLA-RL, SimpleVLA-RL</strong>)보다 높은 샘플 효율을 달성합니다.</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Intervention probe -->
-  <section class="section">
-    <div class="container is-max-desktop content">
-      <h2 class="title is-3">단계 안에서 행동하기: 개입 프로브 <span class="tag is-warning is-medium">예비</span></h2>
-      <p>
-        탐지된 단계를 <em>사용</em>하는 첫 시도입니다. 런타임 실패 확률 탐지기(&pi;<sub>0.5</sub> 잠재값 위의 LSTM,
-        SAFE 방식)에 가벼운 negate-replay 개입을 붙이고, 성공 롤아웃들로 보정한 <strong>task별 functional conformal
-        임계곡선</strong> &delta;<sub>t</sub>를 점수가 넘는 순간 개입하도록 했습니다. 아래 각 영상은
-        <strong>기준 롤아웃(왼쪽)</strong>과 <strong>동일 롤아웃에 개입을 적용한 경우(오른쪽)</strong>이며, 실패 점수와
-        &delta;<sub>t</sub>를 함께 표시했습니다.
-      </p>
-      <p>
-        <strong>설정.</strong> 고정된 &pi;<sub>0.5</sub>로 LIBERO 4개 suite의 롤아웃 400편(실패 14편)을 모아 z-feature
-        위에서 SAFE-LSTM을 학습하고, task별 성공 곡선으로 &delta;<sub>t</sub>를 보정합니다. 추론 시 점수가
-        &delta;<sub>t</sub>를 넘으면 직전 action chunk를 되감아(negate-replay) 개입합니다. 아래 영상의 작업은
-        LIBERO-Long의 <code>put_the_white_mug_on_the_plate_and_put_the_chocolate_pudding_to_the_right_of_the_plate</code>(index 8)입니다.
-      </p>
-      <div class="columns is-centered">
-        <div class="column">
-          <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
-            <source src="../static/videos/safe_band_ep002.mp4" type="video/mp4">
-          </video>
-          <p class="has-text-centered"><span class="tag is-warning">LATE ALARM</span>&nbsp; 실패 점수가 t&asymp;366/520(에피소드의 약 70%)까지 성공 밴드 안에 머뭅니다 &mdash; 알람은 실패가 이미 진행된 뒤에야 울립니다.</p>
-        </div>
-        <div class="column">
-          <video controls autoplay muted loop playsinline preload="metadata" style="width:100%;border-radius:10px;">
-            <source src="../static/videos/safe_band_ep009.mp4" type="video/mp4">
-          </video>
-          <p class="has-text-centered"><span class="tag is-warning">TOO LATE TO ACT</span>&nbsp; 세 번의 되감기 개입이 모두 분기점 이후에 발동 &mdash; 롤아웃은 여전히 실패합니다.</p>
-        </div>
-      </div>
-      <p>
-        이 점이 본 연구의 핵심입니다. 제대로 보정된 임계값에서도 정책 잠재값 위의 실패 확률 신호는 실패가 이미
-        진행된 뒤에야 울립니다 — 개입하기에는 너무 늦습니다. <em>실패가 얼마나 그럴듯해 보이는지</em>가 아니라
-        <em>결과가 실제로 결정되는 지점</em> — 즉 critical phase — 에서 행동하는 것이 이러한 개입에 필요한 능력입니다.
-      </p>
-    </div>
-  </section>
-
-  <!-- Positioning -->
-  <section class="section">
-    <div class="container is-max-desktop content">
-      <h2 class="title is-3">선행 연구와의 관계</h2>
-      <p>
-        <strong>런타임 실패 탐지</strong> — FAIL-Detect (Xu et al., RSS 2025), FIPER (Römer et al., NeurIPS 2025),
-        SAFE (Gu et al., NeurIPS 2025) — 는 OOD나 불확실성 신호로 경보를 울립니다. 이들은 <em>탐지 전용</em>이며 실패
-        확률을 측정합니다. 우리는 대신 성공적인 롤아웃 내부의 결정 구조를 식별하고 이를 정책 개선과 연결합니다.
-        LIBERO에서 failure-AUROC로 직접 비교합니다.
-      </p>
-      <p>
-        <strong>임계 스텝 / 임계 순간(critical-step / critical-moment)</strong> — Liu (ICCV 2023), Tang (2026),
-        Mao / JITI (2025), Kappler (RSS 2015) — 는 각각 리턴 다양성, 보정 단계의 실패 레이블, 정책 토큰 로짓, 공간
-        특징, 혹은 품질이 섞인 시연을 요구합니다. 우리의 설정은 <em>성공 데이터만</em>, 표현 수준(representation-level),
-        그리고 시간적(temporal)이며, 정책에 구애받지 않습니다(토큰 로짓 불필요).
-      </p>
-    </div>
-  </section>
-
-  <!-- Method & experiments (in progress) -->
-  <section class="section hero is-light">
-    <div class="container is-max-desktop content">
-      <h2 class="title is-3">방법과 실험 <span class="tag is-warning is-medium">진행 중</span></h2>
-      <p>탐지기와 결정 단계 국소화 RL 개선기는 활발히 개발 중입니다. 평가 계획은 다음과 같습니다:</p>
-      <div class="table-container">
-        <table class="table is-bordered is-fullwidth">
-          <tbody>
-            <tr><td><strong>테스트베드</strong></td><td>LIBERO(정량 핵심) + 접촉이 많은 삽입 작업(정성); 시뮬레이션 반사실 롤아웃이 선택 작업에서 실제 결정성을 제공.</td></tr>
-            <tr><td><strong>백본</strong></td><td>고정된 VLA — &pi;<sub>0.5</sub>, &pi;<sub>0</sub>, OpenVLA — 를 잠재 임베딩 + 로봇 상태로 읽음. 정책 가중치는 갱신하지 않음.</td></tr>
-            <tr><td><strong>핵심 지표</strong></td><td>(i) 반사실 실제값과의 결정 민감도 정합; (ii) 평탄한 실패 탐지기 대비 성공 롤아웃에서의 신호; (iii) 결정 단계 전용 개선에서의 RL 샘플 효율.</td></tr>
-            <tr><td><strong>보조</strong></td><td>보고된 베이스라인 대비 홀드아웃 failure-AUROC; 작업 간 전이.</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="is-size-7 has-text-grey">실험이 완료되는 대로 수치를 게시하겠습니다.</p>
     </div>
   </section>
 
